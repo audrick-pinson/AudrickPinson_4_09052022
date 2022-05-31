@@ -13,37 +13,21 @@ fetch("http://localhost:3000/api/products")
   	const products = value;
     console.log(products);
     for (let product of products) {
-        console.log(product);
-        console.log(product.name);
-        console.log(product.price);
-        console.log(product.colors);
-        console.log(product.description);
-        console.log(product.imageUrl);
-        console.log(product._id);
         //insere chaque element dans la page d'acceuil
         document.querySelector('.items').innerHTML += `<div>
-        ${product.imageUrl}
-        ${product.name}
-        ${product.price}
-        ${product.colors}
-        ${product.name}
-        ${product.description}
+        <a href="./product.html?id=${product._id}">
+            <article>
+              <img src="${product.imageUrl}" alt="${product.altTxt}">
+              <h3 class="productName">${product.name}</h3>
+              <p class="productDescription">${product.description}</p>
+            </article>
+          </a>
         </div>`; 
-        //affichage image sur le page du site
-        
-         //console.log['url(.../back/images']
-
-         //const kanap01_imageUrl = <img src="${product.imageUrl}">
-
-         //let img = document.createElement ("img");
-         //img.src = ".../back/images/kanap01.jpeg"
-        
-    }
+      }
   })
   .catch(function(err) {
     console.log(err);
   });
 
-  let
 
 

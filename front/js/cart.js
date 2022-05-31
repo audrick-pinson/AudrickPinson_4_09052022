@@ -1,1 +1,41 @@
-console.log("coucou");
+fetch("http://localhost:3000/api/products")
+  .then(function(res) {
+    if (res.ok) {
+      return res.json();
+    }
+  })
+
+  
+  .then(function(value) {
+  	const products = value;
+    console.log(products);
+    for (let product of products) {
+        //insere chaque element dans la page d'acceuil
+        document.querySelector('#cart__items').innerHTML += `<div>
+        <article class="cart__item" data-id="${product._id}" data-color="${product.color}">
+                <div class="cart__item__img">
+                  <img src="${product.imageUrl}" alt="${product.altTxt}">
+                </div>
+                <div class="cart__item__content">
+                  <div class="cart__item__content__description">
+                    <h2>${product.name}</h2>
+                    <p>${product.color}</p>
+                    <p>${product.price} €</p>
+                  </div>
+                  <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                      <p>Qté : </p>
+                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                      <p class="deleteItem">Supprimer</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+        </div>`; 
+      }
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
