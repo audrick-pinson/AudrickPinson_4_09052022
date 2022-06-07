@@ -35,6 +35,18 @@ fetch("http://localhost:3000/api/products")
               </article>
         </div>`; 
       }
+     const local = JSON.parse(localStorage.getItem("productData"));
+
+     bouton.onclick = () => {
+      localStorage.getItem("productId",productId.value);
+      localStorage.getItem("color",color.value);
+      localStorage.getItem("qty",qty.value);
+
+     }
+
+
+     localStorage.clear(cart__item__content__settings);
+
   })
   .catch(function(err) {
     console.log(err);
