@@ -19,7 +19,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
         document.querySelector('#price').innerHTML = `${product.price}`;
 
         //insertion descriptif de celui ci
-        document.querySelector('#des cription').innerHTML = `${product.description}`;  
+        document.querySelector('#description').innerHTML = `${product.description}`;  
 
 
         //inserer color
@@ -29,11 +29,11 @@ fetch(`http://localhost:3000/api/products/${productId}`)
         }
 
       //donnée englobant le boutton ajouter au panier
-      let cartButton = document.getElementById('addToCart');
-      cartButton.addEventListener('click', function()) {
+      let addToCart = document.getElementById('addToCart');
+      addToCart.addEventListener('click', function( ) {
         let color = document.getElementById('colors').value;
         let qty = document.getElementById('quantity').value;
-        let ProductData = {
+        let productData = {  
           'productId' : productId,
           'color' : color,
           'qty' : qty,
@@ -43,10 +43,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
         if (cart === null) cart = [];
         cart.push(productData);
         localStorage.setItem("cart", JSON.stringify(cart));
-      }
-
-
-
+      });    
 
   })
     .catch(function(err) {

@@ -1,13 +1,24 @@
+
+//recup panier
+ let cart = localStorage.getItem("cart")
+ let productsCart = JSON.parse(cart)
+
+console.log(productsCart);
+
+let productIds = [];
+for( let product of productsCart) {
+ console.log(product.productId)
+}
+
+// //traitement du local storage
 fetch("http://localhost:3000/api/products")
   .then(function(res) {
     if (res.ok) {
       return res.json();
     }
-  })
-
-  
+  })  
   .then(function(value) {
-  	const products = value;
+    const products = value;
     console.log(products);
     for (let product of products) {
         //insere chaque element dans la page d'acceuil
@@ -25,7 +36,7 @@ fetch("http://localhost:3000/api/products")
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.qty}">
                     </div>
                     <div class="cart__item__content__settings__delete">
                       <p class="deleteItem">Supprimer</p>
@@ -44,8 +55,11 @@ fetch("http://localhost:3000/api/products")
 
      }
 
+     //bouton supprimer
+     localStorage.removeItem(".deleteItem");
 
-     localStorage.clear(cart__item__content__settings);
+     //vider le local
+     localStorage.clear("cart");
 
   })
   .catch(function(err) {
