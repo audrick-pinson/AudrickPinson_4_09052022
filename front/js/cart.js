@@ -22,7 +22,7 @@ fetch("http://localhost:3000/api/products")
     console.log(products);
     for (let product of products) {
         //insere chaque element dans la page d'acceuil
-        document.querySelector('#cart__items').innerHTML += `<div>
+        document.querySelector('#cart__items').innerHTML >= `<div>  
         <article class="cart__item" data-id="${product._id}" data-color="${product.color}">
                 <div class="cart__item__img">
                   <img src="${product.imageUrl}" alt="${product.altTxt}">
@@ -48,7 +48,14 @@ fetch("http://localhost:3000/api/products")
       }
      const local = JSON.parse(localStorage.getItem("productData"));
 
-     bouton.onclick = () => {
+     let "#order" = true;
+      if productsCarts = [ qtyCards + colorCards];
+      else{
+      	console.log("Alerte, la commande ne peut se poursuivre!");
+      	if (colorCarts&qtyCarts) = ( != > 0 )
+      }
+
+     bouton.onclick = ("#order") => {
       localStorage.getItem("productId",productId.value);
       localStorage.getItem("color",color.value);
       localStorage.getItem("qty",qty.value);
@@ -56,7 +63,7 @@ fetch("http://localhost:3000/api/products")
      }
 
      //bouton supprimer
-     localStorage.removeItem(".deleteItem");
+     localStorage.removeItem("productId");
 
      //vider le local
      localStorage.clear("cart");

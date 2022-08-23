@@ -39,6 +39,17 @@ fetch(`http://localhost:3000/api/products/${productId}`)
           'qty' : qty,
         };
 
+        let addToCart = true;
+         if qtyCarts = ( 'qtyCarts' <= 0);
+         	else{
+         		console.log("Alerte, la quantité n'a pas été séléctionné");
+         	}
+
+         if colorCarts = ( 'colorCarts' !=);
+         	else{
+         		console.log("Alerte, la couleur n'a pas été séléctionné");
+         	}
+
         let cart = JSON.parse(localStorage.getItem("cart"));
         if (cart === null) cart = [];
         cart.push(productData);
