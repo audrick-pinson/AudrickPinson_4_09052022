@@ -1,20 +1,13 @@
-fetch(`http://localhost:3000/api/products/${productId}`)
-  .then(function(res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-
-  
-  .then(function(value) {
-  	const product = value;
-    console.log(product);
-        
-        //insertion nom du produit et le prix de celui-ci
-        document.querySelector('.confirmation').innerHTML += `<div>
-              <span id="orderId">${productId}</span>
-        </div>`;
-  })
-    .catch(function(err) {
-    console.log(err);
-  });
+let orderId = getUrlParam('orderId');
+console.log(orderId);
+if(orderId === undefined || orderId === null || orderId === '') {
+	// On affiche un message d'erreur
+	document.querySelector('.confirmation').textContent = "Commande introuvable";
+}
+else {
+	// On affiche le orderId dans la page
+	let tagOrderId = document.getElementById('orderId');
+	tagOrderId.textContent = orderId;
+	// On supprime le contenu du panier
+	saveCart([]);
+}

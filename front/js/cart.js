@@ -1,74 +1,272 @@
+// On récupère les produits du panier depuis le localstorage
+let cart = getCart();
 
-//recup panier
- let cart = localStorage.getItem("cart")
- let productsCart = JSON.parse(cart)
-
-console.log(productsCart);
-
-let productIds = [];
-for( let product of productsCart) {
- console.log(product.productId)
+if(cart.length === 0) {
+	document.querySelector('.cart').textContent = "Aucun produit dans le panier";
 }
+else {
+	let cartProductsPriceTotal = 0;
+	let cartProductsQuantityTotal = 0;
 
-// //traitement du local storage
-fetch("http://localhost:3000/api/products")
-  .then(function(res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })  
-  .then(function(value) {
-    const products = value;
-    console.log(products);
-    for (let product of products) {
-        //insere chaque element dans la page d'acceuil
-        document.querySelector('#cart__items').innerHTML >= `<div>  
-        <article class="cart__item" data-id="${product._id}" data-color="${product.color}">
-                <div class="cart__item__img">
-                  <img src="${product.imageUrl}" alt="${product.altTxt}">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${product.name}</h2>
-                    <p>${product.color}</p>
-                    <p>${product.price} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.qty}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>
-        </div>`; 
-      }
-     const local = JSON.parse(localStorage.getItem("productData"));
+	// Pour chacun des produits de mon panier, je veux afficher le HTML
+	for(let productCart of cart) {
+		// Pour afficher les informations HTMLs manquantes, je dois les récupérer depuis l'API
+		fetch(`http://localhost:3000/api/products/${productCart.productId}`)
+		.then(function(res) {
+			if(res.ok) {
+				return res.json();
+			}
+		})
+		.then(function(value) {
+			const product = value;
+			// Je construis le HTML permettant d'afficher chacun de mes produits à partir des informations récupérées de l'API.
 
-     let "#order" = true;
-      if productsCarts = [ qtyCards + colorCards];
-      else{
-      	console.log("Alerte, la commande ne peut se poursuivre!");
-      	if (colorCarts&qtyCarts) = ( != > 0 )
-      }
+			// <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+			const myCartItem = document.createElement('article');
+			myCartItem.setAttribute('data-id', product._id );
+			myCartItem.setAttribute('data-color', productCart.color);
+			myCartItem.setAttribute('class', 'cart__item');
+			document.querySelector('#cart__items').appendChild(myCartItem);
 
-     bouton.onclick = ("#order") => {
-      localStorage.getItem("productId",productId.value);
-      localStorage.getItem("color",color.value);
-      localStorage.getItem("qty",qty.value);
+			// <div class="cart__item__img">
+			const myElementDivImg = document.createElement('div');
+			myElementDivImg.setAttribute('class', 'cart__item__img');
 
-     }
+			// <img src="../images/product01.jpg" alt="Photographie d'un canapé">
+			const myElementImg = document.createElement('img');
+			myElementImg.setAttribute('src', product.imageUrl);
+			myElementImg.setAttribute('alt', product.altTxt);
+			myElementDivImg.appendChild(myElementImg);
+			myCartItem.appendChild(myElementDivImg);
 
-     //bouton supprimer
-     localStorage.removeItem("productId");
+			// <div class="cart__item__content">
+			const myElementDivItemContent = document.createElement('div');
+			myElementDivItemContent.setAttribute('class', 'cart__item__content');
+			myCartItem.appendChild(myElementDivItemContent);
 
-     //vider le local
-     localStorage.clear("cart");
+			// <div class="cart__item__content__description">
+			const myElementDivItemContentDescription = document.createElement('div');
+			myElementDivItemContentDescription.setAttribute('class', 'cart__item__content__description');
+			myElementDivItemContent.appendChild(myElementDivItemContentDescription);
 
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
+			// <h2>Nom du produit</h2>
+			const myElementName = document.createElement('h2');
+			myElementName.textContent = product.name;
+			myElementDivItemContentDescription.appendChild(myElementName);
+
+			// <p>Vert</p>
+			const myElementColor = document.createElement('p');
+			myElementColor.textContent = productCart.color;
+			myElementDivItemContentDescription.appendChild(myElementColor);
+
+			// <p>42,00 €</p>
+			const myElementPrice = document.createElement('p');
+			myElementPrice.textContent = `${product.price}€`;
+			myElementDivItemContentDescription.appendChild(myElementPrice);
+
+			// <div class="cart__item__content__settings">
+			const myElementDivItemContentSettings = document.createElement('div');
+			myElementDivItemContentSettings.setAttribute('class', 'cart__item__content__settings');
+			myElementDivItemContent.appendChild(myElementDivItemContentSettings);
+
+			// <div class="cart__item__content__settings__quantity">
+			const myElementDivItemContentSettingsQuantity = document.createElement('div');
+			myElementDivItemContentSettingsQuantity.setAttribute('class', 'cart__item__content__settings__quantity');
+			myElementDivItemContentSettings.appendChild(myElementDivItemContentSettingsQuantity);
+
+			// <p>Qté : </p>
+			const myElementQuantityP = document.createElement('p');
+			myElementQuantityP.textContent = "Qté : ";
+			myElementDivItemContentSettingsQuantity.appendChild(myElementQuantityP);
+
+			// <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+			const myElementQty = document.createElement('input');
+			myElementQty.setAttribute('min', 1);
+			myElementQty.setAttribute('max', 100);
+			myElementQty.setAttribute('name', "itemQuantity");
+			myElementQty.setAttribute('class', "itemQuantity");
+			myElementQty.setAttribute('type', "number");
+			myElementQty.setAttribute('value', productCart.qty);
+			myElementDivItemContentSettingsQuantity.appendChild(myElementQty);
+			myElementQty.addEventListener('change', function() {
+				// Récupérer le panier et les produits contenus
+				let cart = getCart();
+				// Chercher et trouver le produit dont il faut modifier la quantité
+				let index = findProductFromCart(productCart.productId, productCart.color);
+				console.log(index);
+				// Modifier la quantité
+				if(index !== -1) {
+					cart[index].qty = myElementQty.value;
+					// Sauvegarder le panier modifié dans le localStorage
+					saveCart(cart);
+					// Rafraichir la page
+					location.reload();
+				}
+			});
+
+			// <div class="cart__item__content__settings__delete">
+			const myElementDivItemContentSettingsDelete = document.createElement('div');
+			myElementDivItemContentSettingsDelete.setAttribute('class', 'cart__item__content__settings__delete');
+			myElementDivItemContentSettings.appendChild(myElementDivItemContentSettingsDelete);
+
+			// <p class="deleteItem">Supprimer</p>
+			const myElementDeleteItem = document.createElement('p');
+			myElementDeleteItem.textContent = "Supprimer";
+			myElementDeleteItem.setAttribute('class', "deleteItem");
+			myElementDivItemContentSettingsDelete.appendChild(myElementDeleteItem);
+			myElementDeleteItem.addEventListener('click', function() {
+				// Récupérer le panier et les produits contenus
+				let cart = getCart();
+				// Chercher et trouver le produit dont il faut modifier la quantité
+				let index = findProductFromCart(productCart.productId, productCart.color);
+				console.log(index);
+				// Supprimer la case du tableau
+				if(index !== -1) {
+					cart.splice(index, 1);
+					//cart = cart.filter(item => ((productCart.productId !== item.productId) && (productCart.color !== item.color)));
+					// Sauvegarder le panier modifié dans le localStorage
+					saveCart(cart);
+					// Rafraichir la page
+					location.reload();
+				}
+			});
+
+			// calcul prix total
+			const totalPrice = document.getElementById("totalPrice");
+			cartProductsPriceTotal = cartProductsPriceTotal + (product.price *= productCart.qty);
+			totalPrice.textContent = cartProductsPriceTotal;
+
+			// Afficher le nombre total de produits
+			const totalQuantity = document.getElementById("totalQuantity");
+			cartProductsQuantityTotal = cartProductsQuantityTotal + Number(productCart.qty);
+			totalQuantity.textContent = cartProductsQuantityTotal;
+
+		})
+		.catch(function(err) {
+			console.log(err);
+		});
+	}
+
+
+	// Détecter l'envoi du formulaire de commande
+	let orderBtn = document.getElementById("order");
+	orderBtn.addEventListener("click", function(event) {
+		event.preventDefault();
+		// Checking Form
+		if(validateForm() === true) {
+			// -- Récupérer les données du formulaire
+			let contactData = {
+				firstName: document.getElementById("firstName").value,
+				lastName: document.getElementById("lastName").value,
+				address: document.getElementById("address").value,
+				city: document.getElementById("city").value,
+				email: document.getElementById("email").value,
+			};
+
+			// -- Analyser / Vérifier les données du formulaire
+			// -- -- À faire plus tard !
+
+			// -- Faire un tableau des IDs des produits contenu dans le panier
+			let cartTmp = getCart();
+			let productsIds = [];
+			for(let item of cartTmp) {
+				productsIds.push(item.productId)
+			}
+
+			// -- Envoyer le formulaire au backend via un fetch POST
+			fetch("http://localhost:3000/api/products/order", {
+				method: "POST",
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					contact: contactData,
+					products: productsIds,
+				}),
+			})
+			.then(function(res) {
+				if (res.ok) {
+					return res.json();
+				}
+			})
+			.then(function(res) {
+				// -- Récupérer la réponse du fetch (qui contiendra le orderId)
+				console.log('---------------------', res);
+				console.log(res.orderId);
+				// -- Rediriger l'utilisateur sur la page confirmation.html?orderId=4567897654567 en passant en paramètre le orderId
+				window.location = "confirmation.html?orderId=" + res.orderId;
+			})
+			.catch(function(err) {
+				console.log(err);
+			});
+		}
+	});
+
+
+	function validateForm() {
+		let isValid = true;
+
+		// Validation du firstName
+		let firstNameInput = document.getElementById('firstName');
+		let firstNameError = document.getElementById('firstNameErrorMsg');
+		let firstNameRegex = new RegExp("^[a-zA-ZÀ-ÿ '-]+$");
+		if(firstNameRegex.test(firstNameInput.value)) {
+			firstNameError.textContent = "";
+		}
+		else {
+			firstNameError.textContent = "le prenom est invalide";
+			isValid = false;
+		}
+
+		// Validation du lastName
+		let lastNameInput = document.getElementById('lastName');
+		let lastNameError = document.getElementById('lastNameErrorMsg');
+		let lastNameRegex = new RegExp("^[a-zA-ZÀ-ÿ '-]+$");
+		if(lastNameRegex.test(lastNameInput.value)) {
+			lastNameError.textContent = "";
+		}
+		else {
+			lastNameError.textContent = "le nom est invalide";
+			isValid = false;
+		}
+
+		// Validation du address
+		let addressInput = document.getElementById('address');
+		let addressError = document.getElementById('addressErrorMsg');
+		let adressRegex = new RegExp("^[0-9a-zA-ZÀ-ÿ '-]+$");
+		if(adressRegex.test(addressInput.value)) {
+			addressError.textContent = "";
+		}
+		else {
+			addressError.textContent = "l'adresse' est invalide";
+			isValid = false;
+		}
+
+		// Validation du city
+		let cityInput = document.getElementById('city');
+		let cityError = document.getElementById('cityErrorMsg');
+		let cityRegex = new RegExp("^[a-zA-ZÀ-ÿ '-]+$");
+		if(cityRegex.test(cityInput.value)) {
+			cityError.textContent = "";
+		}
+		else {
+			cityError.textContent = "la ville est invalide";
+			isValid = false;
+		}
+
+		// Validation du email
+		let emailInput = document.getElementById('email');
+		let emailError = document.getElementById('emailErrorMsg');
+		let emailRegex = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$");
+		if(emailRegex.test(emailInput.value)) {
+			emailError.textContent = "";
+		}
+		else {
+			emailError.textContent = "l'email est invalide";
+			isValid = false;
+		}
+
+		return isValid;
+	}
+}

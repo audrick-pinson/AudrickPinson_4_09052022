@@ -1,63 +1,57 @@
-const productId = new URL(window.location.href).searchParams.get('id');
+let productId = getUrlParam('id');
 console.log(productId);
 
 fetch(`http://localhost:3000/api/products/${productId}`)
-  .then(function(res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .then(function(value) {
-  	const product = value;
-    console.log(product);
-        //insere chaque element dans la page d'acceuil
-        document.querySelector('.item__img').innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+.then(function(res) {
+	if (res.ok) {
+		return res.json();
+	}
+})
+.then(function(value) {
+	const product = value;
+	console.log('product', product);
+	if(product === undefined || Array.isArray(product)) {
+		document.querySelector('.item').textContent = "Produit introuvable";
+	}
+	else {
+		//insere chaque element dans la page d'acceuil
+		const tagImage = document.createElement('img');
+		tagImage.setAttribute('src', product.imageUrl);
+		tagImage.setAttribute('alt', product.altTxt);
+		document.querySelector('.item__img').appendChild(tagImage);
 
-        //insertion nom du produit et le prix de celui-ci
-        document.querySelector('#title').innerHTML = `${product.name}`;
+		//insertion nom du produit et le prix de celui-ci
+		document.querySelector('#title').textContent = product.name;
+		document.querySelector('#price').textContent = product.price;
 
-        document.querySelector('#price').innerHTML = `${product.price}`;
+		//insertion descriptif de celui ci
+		document.querySelector('#description').textContent = product.description;
 
-        //insertion descriptif de celui ci
-        document.querySelector('#description').innerHTML = `${product.description}`;  
+		//inserer color
+		console.log(product.colors);
+		for (let color of product.colors) {
+			const tagOption = document.createElement('option');
+			tagOption.setAttribute('value', color);
+			tagOption.textContent = color;
+			document.querySelector('#colors').appendChild(tagOption);
+		}
 
-
-        //inserer color
-        console.log(product.colors);
-        for (let color of product.colors) {
-          document.querySelector('#colors').innerHTML += `<option value=${color}>${color}</option>`;
-        }
-
-      //donnée englobant le boutton ajouter au panier
-      let addToCart = document.getElementById('addToCart');
-      addToCart.addEventListener('click', function( ) {
-        let color = document.getElementById('colors').value;
-        let qty = document.getElementById('quantity').value;
-        let productData = {  
-          'productId' : productId,
-          'color' : color,
-          'qty' : qty,
-        };
-
-        let addToCart = true;
-         if qtyCarts = ( 'qtyCarts' <= 0);
-         	else{
-         		console.log("Alerte, la quantité n'a pas été séléctionné");
-         	}
-
-         if colorCarts = ( 'colorCarts' !=);
-         	else{
-         		console.log("Alerte, la couleur n'a pas été séléctionné");
-         	}
-
-        let cart = JSON.parse(localStorage.getItem("cart"));
-        if (cart === null) cart = [];
-        cart.push(productData);
-        localStorage.setItem("cart", JSON.stringify(cart));
-      });    
-
-  })
-    .catch(function(err) {
-    console.log(err);
-  });
-
+		//donnée englobant le boutton ajouter au panier
+		let addToCart = document.getElementById('addToCart');
+		addToCart.addEventListener('click', function(event) {
+			let color = document.getElementById('colors').value;
+			let qty = document.getElementById('quantity').value;
+			//creation signale d'alerte si le produit ne comprend ni la quantité ni la couleur désignés
+			if(qty > 0 && qty <= 100 && color !== '') {
+				addProductToCart(productId, color, qty);
+				alert("Produit ajouté au panier");
+			}
+			else {
+				alert("Merci de saisir une quantité supérieur à zéro et de choisir une couleur");
+			}
+		});
+	}
+})
+.catch(function(err) {
+	console.log(err);
+});

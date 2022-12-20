@@ -9,11 +9,7 @@ fetch("http://localhost:3000/api/products")
 .then(function(value) {
 	const products = value;
 	console.log(products);
-	if(products.length === 0) {
-		document.querySelector('.items').textContent = "Aucun produit disponible";
-	}
-	else {
-		for (let product of products) {
+	for (let product of products) {
 			//console.log(product);
 
 			// document.querySelector('.items').innerHTML += `
@@ -53,10 +49,8 @@ fetch("http://localhost:3000/api/products")
 			tagP.setAttribute('class', 'productDescription');
 			tagP.textContent = product.description;
 			tagArticle.appendChild(tagP);
-		}
-	}
+	 }
 })
 .catch(function(err) {
 	console.log(err);
-	document.querySelector('.items').textContent = "Aucun produit disponible";
 });
