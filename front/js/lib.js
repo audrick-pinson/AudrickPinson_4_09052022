@@ -51,20 +51,12 @@ function addProductToCart(productId = '', productColor = '', quantity = 0) {
 function updateProductQuantityFromCart(productId = '', productColor = '', quantity = 0) {
 	// @todo
 	let cart = getCart();
-	let index = addProductToCart(productId, productColor, quantity);
-	//ajouter de la quantite
-	if (index += 1) {cart[index].qty = Number(cart[index].qty) + Number(quantity);}
-
-	//soustraire de la quantité
-	else
-		(index -= 1) {cart[index].qty = Number(cart[index].qty) - Number(quantity);}
-
-	//supprimer le produit du panier si la quantité est egale ou inférieur à 0
-
-	alert("Produit à été supprimer du panier");
-		cart.push(productData);
-
-	saveCart(cart);
+	let index = findProductFromCart(productId, productColor);
+	if (index !== -1){
+		//ajouter de la quantite
+		cart[index].qty = Number(quantity);
+		saveCart(cart);
+	}
 
 }
 
@@ -72,5 +64,10 @@ function updateProductQuantityFromCart(productId = '', productColor = '', quanti
 function deleteProductToCart(productId = '', productColor = '') {
 	// @todo
 	let cart = getCart();
-	let index = deleteProductToCart(productId, productColor);
+	let index = findProductFromCart(productId, productColor);
+	if (index !== -1){
+		cart.splice(index, 1);
+		saveCart(cart);
+	}
+
 }
