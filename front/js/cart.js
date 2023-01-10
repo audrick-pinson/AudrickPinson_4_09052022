@@ -1,3 +1,4 @@
+
 // On récupère les produits du panier depuis le localstorage
 let cart = getCart();
 

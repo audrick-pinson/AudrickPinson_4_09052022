@@ -1,5 +1,3 @@
-//console.log('hello');
-
 // Fonction permettant de récupérer le contenu du cart depuis le localstorage // let cart = getCart();
 function getCart() {
 	let cart = [];
